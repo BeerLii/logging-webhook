@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: log-annotate-webhook
+  labels:
+    app: log-annotate-webhook
+    kind: mutator
+webhooks:
+  - name: log-annotate-webhook.dbs.dev
+    clientConfig:
+      service:
+        name: log-annotate-webhook
+        namespace: kube-system
+        path: "/webhook/log-annotate-mutate"
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURvakNDQW9xZ0F3SUJBZ0lVRngvYll2WjhzZHFtN0syZHpLcTZ6WDFLdUNRd0RRWUpLb1pJaHZjTkFRRUwKQlFBd2FURUxNQWtHQTFVRUJoTUNRMDR4RWpBUUJnTlZCQWdUQ1VkMVlXNW5XbWh2ZFRFU01CQUdBMVVFQnhNSgpSM1ZoYm1kYWFHOTFNUXd3Q2dZRFZRUUtFd05yT0hNeER6QU5CZ05WQkFzVEJsTjVjM1JsYlRFVE1CRUdBMVVFCkF4TUthM1ZpWlhKdVpYUmxjekFlRncweU16QTVNVEV3T1RRd01EQmFGdzB5T0RBNU1Ea3dPVFF3TURCYU1Ha3gKQ3pBSkJnTlZCQVlUQWtOT01SSXdFQVlEVlFRSUV3bEhkV0Z1WjFwb2IzVXhFakFRQmdOVkJBY1RDVWQxWVc1bgpXbWh2ZFRFTU1Bb0dBMVVFQ2hNRGF6aHpNUTh3RFFZRFZRUUxFd1pUZVhOMFpXMHhFekFSQmdOVkJBTVRDbXQxClltVnlibVYwWlhNd2dnRWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURYM2RaL1dSa0cKZitMTlpaR3BmdjZ6aTF2Nm8remtkVDBxV3VPYy9DMThWTTlzeGU5QzNLOWpmN3I0a0dmV3psQ0c5NXYvbktHNQpuRGZGZkxOMHVUL0ZHemYwdkxiWXFnUTdRVlpCNTZ3U29lZllZY1pLTW5iMVh1OHprcGwwanhkZUw5V295djJkCnJLSTUveHdKcnMwaHA0UTd2M1RCNDFsS2xQOTU0MHQxK2pPaFVNL2JJbUhCZURxK25LaWVvRzhFQTNRWnlNeDgKWjFPT3h6UDRGZ2k4OUNtS21qQS85dTJhRFpqVXRCWlFCQ3JqckFnalo1TkpLYzVjbE9XWldCU0E0ZVJlNDhZUwpRTjNUTmVlbnZGb3drZnhwMmF2ZkxHSGZpZmFqUGxoa3MreHhTQzlCWWlGd0FRSXR4ajJKU2U2Y1g4Q2QrWklQCkRYOGd1L00xMTdRSkFnTUJBQUdqUWpCQU1BNEdBMVVkRHdFQi93UUVBd0lCQmpBUEJnTlZIUk1CQWY4RUJUQUQKQVFIL01CMEdBMVVkRGdRV0JCU0h1MkZyZFBScHBvb21HOFIvUjc2VndqalhiakFOQmdrcWhraUc5dzBCQVFzRgpBQU9DQVFFQXJxRzFHYloxRkkyYy9rYVhkTkZPTmtIbUc2VGxMYk9SUWJuSUtFR1AwYmV6S0ZsZDI1cDY4M1NTCjZaTkVDK3VaSTI2clhrTjIzUUU5Q2hFbjBCODJFMU5LRlZZZmkwWEFycVlycHBka05JZlRLQkpveUZtNGQ1S3AKbVZvdm1CbXI0WmlEMkd3NjMybmcxaDFYSTBTQkJtbk02MHdudlpGTDJ2b1dOS294azRPSC9scjdZazh3clFSMAovSytFNVFCSHBnaERYQjZHTmszQTdtcUhFUmZLby9mdTdmcHo2R0Z5c0xUbU85dk5TV2tMSkJRM2k5dThJeXhXCnFJUmFWc3dJSi9CQ0o1azlna1BiY3NiL2Q0Q1BucGMwQzZxUWhyUjFLR3Q4STZJVkJBd2ZxblREZGlmeGtyMzUKVGMxbHZYMVVTdVlpcFBYU2hlTWxiN2E5cjRVc2lnPT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    rules:
+      - operations: [ "CREATE" ]
+        apiGroups: ["apps"]
+        apiVersions: ["v1"]
+        resources: ["deployments"]
+
+    sideEffects: None
+    admissionReviewVersions:
+      - "v1"
+    namespaceSelector:
+      matchExpressions:
+        - key: log-enable
+          operator: In
+          values:
+            - "true"
+
+

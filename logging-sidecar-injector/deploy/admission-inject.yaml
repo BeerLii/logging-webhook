@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-annotate-webhook
+  namespace: kube-system
+  labels:
+    app: log-annotate-webhook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-annotate-webhook
+  template:
+    metadata:
+      labels:
+        app: log-annotate-webhook
+    spec:
+      serviceAccountName: beer-cluster-admin
+      containers:
+        - name: log-annotate-webhook
+          image: bwei/logging-webhook:v12
+          imagePullPolicy: Always
+          args:
+            - -tls-cert-file=/etc/certs/tls.crt
+            - -tls-key-file=/etc/certs/tls.key
+            - -image-name=busybox:1.36
+          volumeMounts:
+            - name: webhook-certs
+              mountPath: /etc/certs
+              readOnly: true
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: log-annotate-webhook-certs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: log-annotate-webhook
+  namespace: kube-system
+  labels:
+    app: log-annotate-webhook
+spec:
+  ports:
+    - port: 443
+      targetPort: 8080
+  selector:
+    app: log-annotate-webhook

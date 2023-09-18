@@ -1,0 +1,58 @@
+apiVersion: "apiextensions.k8s.io/v1"
+kind: "CustomResourceDefinition"
+metadata:
+  name: "loginfos.dbs.k8s.io"
+  annotations:
+    "api-approved.kubernetes.io": "https://github.com/kubernetes/enhancements/pull/1111"
+spec:
+  group: "dbs.k8s.io"
+  versions:
+    - name: "v1alpha1"
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                log:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      containername:
+                        type: string
+                      logpath:
+                        type: string
+                      logdetail:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            filename:
+                              type: string
+                            name:
+                              type: string
+  scope: "Namespaced"
+  names:
+    plural: "loginfos"
+    singular: "li"
+    kind: "LogInfo"
+
+---
+
+apiVersion: dbs.k8s.io/v1alpha1
+kind: LogInfo
+metadata:
+  name: busybox-loginfo
+spec:
+  log:
+    - logpath: /var/log
+      logdetail:
+        - filename: app1.log
+          name: app1
+        - filename:  app2.log
+          name: app2
+      containername: busybox

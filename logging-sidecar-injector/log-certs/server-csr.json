@@ -1,0 +1,16 @@
+{
+  "CN": "admission",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "CN",
+      "L": "GuangZhou",
+      "ST": "GuangZhou",
+      "O": "k8s",
+      "OU": "System"
+    }
+  ]
+}

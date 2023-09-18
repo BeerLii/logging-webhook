@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-test
+  annotations:
+    loginfo-inject-name: "busybox-loginfo"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busybox
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      containers:
+        - name: busybox
+          image: busybox
+          args:
+            - /bin/sh
+            - -c
+            - >
+              i=0;
+              while true;
+              do
+                echo "$i: $(date)" >> /var/log/app1.log;
+                echo "$(date) INFO $i" >> /var/log/app2.log;
+                i=$((i+1));
+                sleep 1;
+              done 
